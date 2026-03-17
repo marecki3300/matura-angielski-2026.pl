@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Test P24</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
+    button { background: #e02020; color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 6px; }
+    button:hover { background: #c01010; }
+    pre { background: #f4f4f4; padding: 16px; border-radius: 6px; overflow-x: auto; margin-top: 20px; }
+    a { display: inline-block; margin-top: 16px; color: #e02020; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Test rejestracji transakcji P24</h2>
+  <button onclick="testRejestracja()">Zarejestruj transakcję testową</button>
+  <pre id="wynik">Wynik pojawi się tutaj...</pre>
+  <div id="link"></div>
+
+  <script>
+    async function testRejestracja() {
+      document.getElementById("wynik").textContent = "Ładowanie...";
+      document.getElementById("link").innerHTML = "";
+
+      try {
+        const response = await fetch("/.netlify/functions/p24-register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId: "test-" + Date.now(),
+            amount: 100,
+            currency: "PLN",
+            description: "Testowa platnosc 1 zl",
+            email: "test@test.pl",
+            urlReturn: window.location.origin + "/sukces.html",
+            urlStatus: window.location.origin + "/.netlify/functions/p24-webhook"
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById("wynik").textContent = JSON.stringify(data, null, 2);
+
+        if (data.redirectUrl) {
+          document.getElementById("link").innerHTML =
+            `<a href="${data.redirectUrl}" target="_blank">➜ Przejdź do płatności P24</a>`;
+        }
+
+      } catch (error) {
+        document.getElementById("wynik").textContent = "Błąd: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
+```
+
+---
+
+Struktura plików powinna wyglądać tak:
+```
+twoj-projekt/
+├── netlify/
+│   └── functions/
+│       ├── p24-test.js
+│       └── p24-register.js
+├── test-payment.html
+└── index.html
+```
+
+Wrzuć folder na Netlify i wejdź na:
+```
+https://matura-angielski.netlify.app/test-payment.html
