@@ -14,11 +14,9 @@
   </style>
 </head>
 <body>
-
 <div class="payment-container">
   <h2 class="text-center mb-4"><strong>Potwierdź zamówienie</strong></h2>
   <p class="text-center mb-4">Kupujesz: <strong>E-book "100 zadań gramatycznych"</strong><br>Cena: 49,00 zł</p>
-
   <form id="p24form">
     <div class="form-check mb-3">
       <input class="form-check-input" type="checkbox" id="reg" required>
@@ -26,55 +24,35 @@
         Akceptuję <a href="page3.html" target="_blank">regulamin sklepu</a> (Sprzedawca: Marek Oleszkiewicz)
       </label>
     </div>
-
     <div class="form-check mb-4">
       <input class="form-check-input" type="checkbox" id="rodo" required>
       <label class="form-check-label" for="rodo">
         Akceptuję <a href="page4.html" target="_blank">politykę prywatności</a>
       </label>
     </div>
-
     <div class="mb-4">
       <label class="form-label">Twój e-mail (tu wyślemy e-book):</label>
       <input type="email" class="form-control" id="cust_email" placeholder="email@przyklad.pl" required>
     </div>
-
-    <button type="submit" class="btn btn-primary" id="submit-btn">Płacę 49,00 zł przez Przelewy24</button>
+    <button type="submit" class="btn btn-primary" id="submit-btn">Płacę 49,00 zł</button>
   </form>
 </div>
-
 <script>
-document.getElementById('p24form').onsubmit = async function(e) {
+  // Wklej tutaj swój link Stripe (na razie testowy, potem zmień na produkcyjny)
+  const STRIPE_LINK = 'https://buy.stripe.com/test_28EdR20ps1AE7Ih4Go2sM00';
+
+  document.getElementById('p24form').onsubmit = function(e) {
     e.preventDefault();
-    
+
     const email = document.getElementById('cust_email').value;
     const btn = document.getElementById('submit-btn');
-    
-    btn.innerText = 'Inicjowanie płatności...';
+
+    btn.innerText = 'Przekierowuję do płatności...';
     btn.disabled = true;
 
-    try {
-        const response = await fetch('/.netlify/functions/create-payment', {
-            method: 'POST',
-            body: JSON.stringify({ email: email }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        const data = await response.json();
-
-        if (data.url) {
-            window.location.href = data.url;
-        } else {
-            throw new Error('Błąd serwera płatności');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Wystąpił błąd. Spróbuj ponownie za chwilę.');
-        btn.innerText = 'Płacę 49,00 zł przez Przelewy24';
-        btn.disabled = false;
-    }
-};
+    // Przekazujemy email jako parametr do Stripe (Stripe go automatycznie wstawi)
+    window.location.href = STRIPE_LINK + '?prefilled_email=' + encodeURIComponent(email);
+  };
 </script>
-
 </body>
 </html>
