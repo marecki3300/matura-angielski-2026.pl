@@ -11,7 +11,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "axios": "^1.13.6",
     "przelewy24": "^1.0.1"
   }
 }
