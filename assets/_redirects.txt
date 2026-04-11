@@ -1,0 +1,20 @@
+# --- SEKCA SEO: PRZEKIEROWANIA DOMENY ---
+
+# 1. Wymuszenie HTTPS (Netlify robi to domyślnie, ale warto mieć to w regułach)
+# Przekierowuje cały ruch na bezpieczne połączenie
+http://matura-angielski-zadania.netlify.app/* https://matura-angielski-zadania.netlify.app/:splat  301!
+
+# 2. Obsługa "Trailing Slash" (SEO Friendly)
+# Jeśli Google widzi /page2 i /page2/, traktuje to jako dwa różne adresy.
+# Netlify domyślnie to ujednolica, ale ta reguła zabezpiecza routing w aplikacji:
+/page2/  /page2  301
+/page3/  /page3  301
+/page4/  /page4  301
+/platnosc/  /platnosc  301
+
+# --- SEKCJA FUNKCJONALNA: ROUTING SPA ---
+
+# 3. Obsługa Single Page Application (React/Vite/itp.)
+# Ta reguła jest KLUCZOWA dla SEO, bo zapobiega błędom 404, 
+# gdy robot Google próbuje wejść bezpośrednio na podstronę.
+/* /index.html  200

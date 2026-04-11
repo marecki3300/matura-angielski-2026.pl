@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <title>Finalizacja zamówienia - Kasia English Teacher</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+  <style>
+    body { background-color: #FDEDEE; font-family: 'Brygada 1918', serif; padding: 50px 20px; }
+    .payment-container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .btn-primary { background-color: #3185FC !important; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; }
+    a { color: #3185FC; text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="payment-container">
+  <h2 class="text-center mb-4"><strong>Potwierdź zamówienie</strong></h2>
+  <p class="text-center mb-4">Kupujesz: <strong>E-book "100 zadań gramatycznych"</strong><br>Cena: 49,00 zł</p>
+  <form id="p24form">
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="reg" required>
+      <label class="form-check-label" for="reg">
+        Akceptuję <a href="page3.html" target="_blank">regulamin sklepu</a> 
+      </label>
+    </div>
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" id="rodo" required>
+      <label class="form-check-label" for="rodo">
+        Akceptuję <a href="page4.html" target="_blank">politykę prywatności</a>
+      </label>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Twój e-mail (tu wyślemy e-book):</label>
+      <input type="email" class="form-control" id="cust_email" placeholder="email@przyklad.pl" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="submit-btn">Płacę 49,00 zł</button>
+  </form>
+</div>
+<script>
+  // Wklej tutaj swój link Stripe (na razie testowy, potem zmień na produkcyjny)
+  const STRIPE_LINK = 'https://buy.stripe.com/8x2bIUdVj8dLbKa4dg1Jm01';
+
+  document.getElementById('p24form').onsubmit = function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('cust_email').value;
+    const btn = document.getElementById('submit-btn');
+
+    btn.innerText = 'Przekierowuję do płatności...';
+    btn.disabled = true;
+
+    // Przekazujemy email jako parametr do Stripe (Stripe go automatycznie wstawi)
+    window.location.href = STRIPE_LINK + '?prefilled_email=' + encodeURIComponent(email);
+  };
+</script>
+</body>
+</html>
